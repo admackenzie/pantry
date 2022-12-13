@@ -1,3 +1,6 @@
+// Local modules
+import { router } from './views/views.mjs';
+// Third party modules
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -7,15 +10,14 @@ dotenv.config({ path: './config.env' });
 
 const app = express();
 
-app.get('/api', (req, res) => {
-	res.json('Server connected.');
-});
+app.use('/api', router);
+// app.use(express.json());
 
 // Server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-	console.log(`🟢 Server listening on port ${PORT}.`);
+	console.log(`✅ Server connected on port ${PORT}.`);
 });
 
 // Database
@@ -27,4 +29,4 @@ const DB = process.env.DATABASE.replace(
 mongoose.set('strictQuery', false);
 mongoose
 	.connect(DB)
-	.then(() => console.log('🟢 Database connection successful.'));
+	.then(() => console.log('✅ Database connection successful.'));
