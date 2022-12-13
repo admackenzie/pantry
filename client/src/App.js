@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
+// Local modules
+import IndexPage from './pages/IndexPage';
+// Third party modules
+import { Route, Routes } from 'react-router-dom';
 
 export default function App() {
-	// Fetch backend data
-	const [backendData, setBackendData] = useState();
-	useEffect(() => {
-		fetch('/api')
-			.then(res => res.json())
-			.then(data => setBackendData(data));
-	}, []);
-
-	return <div>{backendData}</div>;
+	return (
+		<Routes>
+			<Route element={<IndexPage />} exact path="/" />
+		</Routes>
+	);
 }
