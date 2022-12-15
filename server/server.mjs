@@ -8,10 +8,10 @@ import mongoose from 'mongoose';
 // Import config.env file
 dotenv.config({ path: './config.env' });
 
+// Configure express
 const app = express();
-
+app.use(express.json());
 app.use('/api', router);
-// app.use(express.json());
 
 // Server
 const PORT = process.env.PORT || 5000;

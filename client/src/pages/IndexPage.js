@@ -11,36 +11,38 @@ export default function IndexPage() {
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 
+	// TODO: improve other async functions to useState like this, or remove bloat from this function like the others
+
+	const fetchData = async () => {
+		try {
+			const res = await fetch('/api');
+			const json = await res.json();
+
+			setIsLoaded(true);
+			setData(json.data.items);
+		} catch (error) {
+			setIsLoaded(true);
+			setError(error);
+		}
+	};
+
 	// Fetch all items
-	useEffect(() => {
-		fetch('/api')
-			.then(res => res.json())
-			.then(
-				res => {
-					setIsLoaded(true);
-					setData(res.data.items);
-				},
-				error => {
-					setIsLoaded(true);
-					setError(error);
-				}
-			);
-	}, []);
+	useEffect(() => fetchData, []);
 
 	if (error) {
-		return <div>Error: {error.message}</div>;
+		return <>Error: {error.message}</>;
 	} else if (!isLoaded) {
-		return <div>Loading...</div>;
+		return <>Loading...</>;
 	} else {
 		return (
 			<Container fluid>
-				<Header />
+				<Header fetchData={fetchData} />
 
 				<Row className="g-3" md={2} xs={1}>
 					{data.map(item => {
 						return (
-							<Col key={item.name}>
-								<ItemCard data={item} />
+							<Col key={item._id}>
+								<ItemCard data={item} fetchData={fetchData} />
 							</Col>
 						);
 					})}
