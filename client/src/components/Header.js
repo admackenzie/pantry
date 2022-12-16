@@ -2,33 +2,67 @@
 import { useState } from 'react';
 // Local modules
 import AddItemModal from './AddItemModal';
+import SettingsMenu from './SettingsMenu';
 // Third party modules
 import { Button, Form, Nav, Navbar, Stack } from 'react-bootstrap';
 
 export default function Header(props) {
 	const [showModal, setShowModal] = useState(false);
+	const [showOffcanvas, setShowOffcanvas] = useState(false);
 
-	// TODO: implement search
+	const [searchInput, setSearchInput] = useState('');
+	const handleSearch = e => {
+		e.preventDefault();
+
+		// Search bar display
+		setSearchInput(e.target.value);
+
+		// Fetch search bar results
+		props.fetchData(`?name=${e.target.value}`);
+	};
 
 	return (
 		<Stack className="bg-light px-3 mb-3 sticky-top" gap={1}>
 			<Nav className="align-items-center justify-content-between">
-				{/* <Nav.Item className="fs-1">Pantry</Nav.Item> */}
-				<Navbar.Brand className="fs-1">Pantry</Navbar.Brand>
-				<Nav.Item>
-					Signed in as <strong>[USER]</strong> |{' '}
-					<a href="#logout">Log out</a>
-				</Nav.Item>
+				<Navbar.Brand
+					className="fs-1"
+					// Quick search reset
+					onClick={() => {
+						setSearchInput('');
+						props.fetchData();
+					}}
+				>
+					Pantry
+				</Navbar.Brand>
+
+				<div className="align-items-center d-inline-flex">
+					<Nav.Item>
+						Signed in as <strong>[USER]</strong>
+					</Nav.Item>
+					<Nav.Item className="ms-3">
+						<Button
+							className="bg-transparent border-0 pe-0"
+							onClick={() => setShowOffcanvas(!showOffcanvas)}
+						>
+							⚙️
+						</Button>
+
+						<SettingsMenu
+							offcanvasState={showOffcanvas}
+							setOffcanvasState={setShowOffcanvas}
+						/>
+					</Nav.Item>
+				</div>
 			</Nav>
 
 			<Nav className="justify-content-between mb-3">
 				<Nav.Item>
 					<Form>
 						<Form.Control
-							type="search"
+							onChange={handleSearch}
 							placeholder="Search"
-							// className="me-2"
-							// aria-label="Search"
+							type="search"
+							value={searchInput}
 						/>
 					</Form>
 				</Nav.Item>
@@ -42,7 +76,7 @@ export default function Header(props) {
 				</Nav.Item>
 			</Nav>
 
-			{/* Add item screen */}
+			{/* Add item functionality*/}
 			<AddItemModal
 				{...props}
 				modalState={showModal}

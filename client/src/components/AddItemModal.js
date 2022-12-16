@@ -10,12 +10,11 @@ export default function AddItemModal(props) {
 	const [expirationDisabled, setExpirationDisabled] = useState(false);
 	const [locationDisabled, setLocationDisabled] = useState(false);
 
-	// Reset form each time the modal is opened
-	const initialize = () => {
+	// Reset form to default values
+	const resetForm = () => {
 		setSizeDisabled(false);
 		setExpirationDisabled(false);
 		setLocationDisabled(false);
-
 		props.setModalState(false);
 	};
 
@@ -50,8 +49,7 @@ export default function AddItemModal(props) {
 			console.log(error);
 		}
 
-		initialize();
-
+		resetForm();
 		props.fetchData();
 	};
 
@@ -59,7 +57,7 @@ export default function AddItemModal(props) {
 		<Modal
 			backdrop="static"
 			centered
-			onHide={() => initialize()}
+			onHide={() => resetForm()}
 			show={props.modalState}
 			size="lg"
 		>
@@ -69,13 +67,14 @@ export default function AddItemModal(props) {
 				</Modal.Header>
 
 				<Modal.Body>
-					<Stack gap={3}>
+					<Stack gap={4}>
 						{/* Name */}
 						<Form.Group controlId="name">
-							<Form.Label>Item name</Form.Label>
+							{/* <Form.Label>Item name</Form.Label> */}
 							<Form.Control
 								placeholder="Enter item name"
 								required
+								size="lg"
 								type="text"
 							/>
 							<Form.Text className="text-muted">
@@ -85,7 +84,7 @@ export default function AddItemModal(props) {
 
 						{/* Size and unit*/}
 						<Form.Group controlId="size">
-							<Form.Label>Size</Form.Label>
+							{/* <Form.Label>Size</Form.Label> */}
 							<Row>
 								<Col>
 									<Form.Control
@@ -94,16 +93,23 @@ export default function AddItemModal(props) {
 										min="1"
 										placeholder="Enter size"
 										required
+										size="lg"
 										type="number"
 									/>
 								</Col>
 								<Col>
 									<Form.Select
+										className="text-muted"
 										disabled={sizeDisabled}
-										placeholder="Choose Unit"
+										onClick={e =>
+											e.target.classList.remove(
+												'text-muted'
+											)
+										}
 										required
+										size="lg"
 									>
-										<option>Choose unit</option>
+										<option hidden>Choose unit</option>
 										<option value="count">count</option>
 										<option value="fl oz">fl oz</option>
 										<option value="g">g</option>
@@ -126,11 +132,14 @@ export default function AddItemModal(props) {
 
 						{/* Expiration */}
 						<Form.Group controlId="expiration">
-							<Form.Label>Expiration date</Form.Label>
+							{/* <Form.Label>Expiration date</Form.Label> */}
 							<Form.Control
 								disabled={expirationDisabled}
+								onFocus={e => (e.target.type = 'date')}
+								placeholder="mm/dd/yyyy"
 								required
-								type="date"
+								size="lg"
+								type="text"
 							/>
 							<Form.Text className="text-muted">
 								<Form.Check
@@ -147,9 +156,17 @@ export default function AddItemModal(props) {
 
 						{/* Location */}
 						<Form.Group controlId="location">
-							<Form.Label>Location</Form.Label>
-							<Form.Select disabled={locationDisabled} required>
-								<option>Choose location</option>
+							{/* <Form.Label>Location</Form.Label> */}
+							<Form.Select
+								className="text-muted"
+								disabled={locationDisabled}
+								onClick={e =>
+									e.target.classList.remove('text-muted')
+								}
+								required
+								size="lg"
+							>
+								<option hidden>Choose location</option>
 								<option value="Basement">Basement</option>
 								<option value="Big cupboard">
 									Big cupboard
@@ -173,7 +190,7 @@ export default function AddItemModal(props) {
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Button onClick={() => initialize()} variant="secondary">
+					<Button onClick={() => resetForm()} variant="secondary">
 						Go back
 					</Button>
 
