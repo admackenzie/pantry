@@ -118,6 +118,9 @@ itemSchema.post(/^find/, function (docs, next) {
 		doc.quantity = doc.quantity ?? 1;
 	}
 
+	// Return results sorted by most recently added
+	docs = docs.sort((a, b) => (a.addedOn < b.addedOn ? 1 : -1));
+
 	next();
 });
 

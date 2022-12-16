@@ -26,12 +26,15 @@ const addItem = async (req, res) => {
 // GET all
 const getAllItems = async (req, res) => {
 	try {
-		const items = await Item.find(req.query, { __v: 0 });
+		// Allow name parameter in queries
+		const re = new RegExp(`${req.query.name ?? ''}`, 'i');
+
+		const items = await Item.find({ name: { $regex: re } }, { __v: 0 });
 
 		res.status(200).json({
 			status: 'success',
 			results: items.length,
-			data: { items },
+			data: { items: items },
 		});
 	} catch (error) {
 		res.status(404).json({
