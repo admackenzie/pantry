@@ -68,16 +68,21 @@ export default function ItemCard(props) {
 				{/* Body */}
 				<ListGroup bg="light" className="fs-2" variant="flush">
 					<ListGroup.Item>
-						Size: {size} {unit}
+						<span className="fw-bold">Size:</span>
+						<span className="ms-3">
+							{size} {unit}
+						</span>
 					</ListGroup.Item>
-					<ListGroup.Item className="d-flex justify-content-between">
-						<>Expires: {expiration}</>
 
+					<ListGroup.Item>
+						<span className="fw-bold">Expires:</span>
+
+						{/* FIXME: badge needs to be vertically aligned */}
 						{/* Expiration state badges*/}
-						<>
+						<span className="ms-3">
 							<Badge
 								bg="warning"
-								className={`my-auto justify-content-end ${
+								className={`me-1 ${
 									!isExpiringSoon && 'd-none'
 								}`}
 							>
@@ -85,13 +90,25 @@ export default function ItemCard(props) {
 							</Badge>
 							<Badge
 								bg="danger"
-								className={`my-auto ${!isExpired && 'd-none'}`}
+								className={`me-1 ${!isExpired && 'd-none'}`}
 							>
 								X
 							</Badge>
-						</>
+
+							<span
+								className={`${
+									isExpiringSoon && 'text-warning'
+								} ${isExpired && 'text-danger'}`}
+							>
+								{expiration}
+							</span>
+						</span>
 					</ListGroup.Item>
-					<ListGroup.Item>Location: {location}</ListGroup.Item>
+
+					<ListGroup.Item>
+						<span className="fw-bold">Location:</span>
+						<span className="ms-3">{location}</span>
+					</ListGroup.Item>
 				</ListGroup>
 
 				{/* Options */}
@@ -132,7 +149,7 @@ export default function ItemCard(props) {
 							Delete item
 						</Dropdown.Item>
 
-						{/* Delete confirmation modal */}
+						{/* Delete confirmation */}
 						<ConfirmModal
 							cancelText="Go back"
 							confirmText="Delete"

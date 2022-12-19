@@ -10,6 +10,10 @@ export default function Header(props) {
 	const [showModal, setShowModal] = useState(false);
 	const [showOffcanvas, setShowOffcanvas] = useState(false);
 
+	// Store sort preference if it's been changed from the default
+	const [sortState, setSortState] = useState('-addedOn');
+
+	// Search bar functionality
 	const [searchInput, setSearchInput] = useState('');
 	const handleSearch = e => {
 		e.preventDefault();
@@ -18,7 +22,7 @@ export default function Header(props) {
 		setSearchInput(e.target.value);
 
 		// Fetch search bar results
-		props.fetchData(`?name=${e.target.value}`);
+		props.fetchData(`?name=${e.target.value}&sort=${sortState}`);
 	};
 
 	return (
@@ -39,6 +43,8 @@ export default function Header(props) {
 					<Nav.Item>
 						Signed in as <strong>[USER]</strong>
 					</Nav.Item>
+
+					{/* Settings menu */}
 					<Nav.Item className="ms-3">
 						<Button
 							className="bg-transparent border-0 pe-0"
@@ -48,14 +54,18 @@ export default function Header(props) {
 						</Button>
 
 						<SettingsMenu
+							{...props}
 							offcanvasState={showOffcanvas}
+							searchInput={searchInput}
 							setOffcanvasState={setShowOffcanvas}
+							setSortState={setSortState}
 						/>
 					</Nav.Item>
 				</div>
 			</Nav>
 
 			<Nav className="justify-content-between mb-3">
+				{/* Search bar */}
 				<Nav.Item>
 					<Form>
 						<Form.Control
@@ -66,17 +76,19 @@ export default function Header(props) {
 						/>
 					</Form>
 				</Nav.Item>
+
+				{/* Add item button */}
 				<Nav.Item>
 					<Button
 						onClick={() => setShowModal(true)}
 						variant="primary"
 					>
-						+ Add new item
+						Add new item
 					</Button>
 				</Nav.Item>
 			</Nav>
 
-			{/* Add item functionality*/}
+			{/* Add item screen*/}
 			<AddItemModal
 				{...props}
 				modalState={showModal}

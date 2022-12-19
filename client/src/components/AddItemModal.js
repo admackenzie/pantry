@@ -10,7 +10,7 @@ export default function AddItemModal(props) {
 	const [expirationDisabled, setExpirationDisabled] = useState(false);
 	const [locationDisabled, setLocationDisabled] = useState(false);
 
-	// Reset form to default values
+	// Blank form
 	const resetForm = () => {
 		setSizeDisabled(false);
 		setExpirationDisabled(false);

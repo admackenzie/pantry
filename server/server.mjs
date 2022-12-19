@@ -1,5 +1,5 @@
 // Local modules
-import { router } from './views/views.mjs';
+import { router } from './routes/routes.mjs';
 // Third party modules
 import dotenv from 'dotenv';
 import express from 'express';

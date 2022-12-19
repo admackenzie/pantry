@@ -5,7 +5,7 @@ import {
 	editItem,
 	getAllItems,
 	getItem,
-} from '../controllers/controller.mjs';
+} from '../controllers/itemController.mjs';
 // Third party modules
 import express from 'express';
 

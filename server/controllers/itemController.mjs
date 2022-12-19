@@ -1,7 +1,8 @@
-import { Item } from '../models/model.mjs';
+import { Item } from '../models/itemModel.mjs';
 
 // -------------------------------- CREATE --------------------------------
 // TODO: runValidators: true ??
+// TODO: better error handling
 
 // POST new item
 const addItem = async (req, res) => {
@@ -29,12 +30,15 @@ const getAllItems = async (req, res) => {
 		// Allow name parameter in queries
 		const re = new RegExp(`${req.query.name ?? ''}`, 'i');
 
-		const items = await Item.find({ name: { $regex: re } }, { __v: 0 });
+		// Return items ordered by most recently added as default
+		let items = await Item.find({ name: { $regex: re } }, { __v: 0 }).sort(
+			req.query.sort ?? '-addedOn'
+		);
 
 		res.status(200).json({
 			status: 'success',
 			results: items.length,
-			data: { items: items },
+			data: { items },
 		});
 	} catch (error) {
 		res.status(404).json({
