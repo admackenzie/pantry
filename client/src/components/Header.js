@@ -7,6 +7,9 @@ import SettingsMenu from './SettingsMenu';
 import { Button, Form, Nav, Navbar, Stack } from 'react-bootstrap';
 
 export default function Header(props) {
+	const { fetchData, userID, username } = props;
+
+	// Toggle hide/show for AddItemModal and SettingsMenu
 	const [showModal, setShowModal] = useState(false);
 	const [showOffcanvas, setShowOffcanvas] = useState(false);
 
@@ -22,7 +25,7 @@ export default function Header(props) {
 		setSearchInput(e.target.value);
 
 		// Fetch search bar results
-		props.fetchData(`?name=${e.target.value}&sort=${sortState}`);
+		fetchData(`/users/${userID}?name=${e.target.value}&sort=${sortState}`);
 	};
 
 	return (
@@ -33,15 +36,16 @@ export default function Header(props) {
 					// Quick search reset
 					onClick={() => {
 						setSearchInput('');
-						props.fetchData();
+						fetchData(`/users/${userID}`);
 					}}
 				>
-					Pantry
+					<span>Pantry</span>
+					<sup className="ms-1 fs-6">0.1.0 build</sup>
 				</Navbar.Brand>
 
 				<div className="align-items-center d-inline-flex">
 					<Nav.Item>
-						Signed in as <strong>[USER]</strong>
+						Signed in as <strong>{username}</strong>
 					</Nav.Item>
 
 					{/* Settings menu */}

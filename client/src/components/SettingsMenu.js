@@ -7,6 +7,16 @@ import ManagePantryModal from './ManagePantryModal';
 import { Button, Col, Container, Offcanvas, Row } from 'react-bootstrap';
 
 export default function SettingsMenu(props) {
+	const {
+		fetchData,
+		offcanvasState,
+		searchInput,
+		setOffcanvasState,
+		setSortState,
+		setToken,
+		userID,
+	} = props;
+
 	// FIXME: This is a hacky way to have toggle button states outside a toggle button group. It only works with a maximum of two buttons (disabled={toggle} and disabled={!toggle})
 	const [buttonToggle, setButtonToggle] = useState(true);
 
@@ -17,15 +27,16 @@ export default function SettingsMenu(props) {
 	const handleSort = sortParam => {
 		setButtonToggle(!buttonToggle);
 
-		props.setSortState(sortParam);
-		props.fetchData(`?name=${props.searchInput}&sort=${sortParam}`);
+		setSortState(sortParam);
+
+		fetchData(`/users/${userID}?name=${searchInput}&sort=${sortParam}`);
 	};
 
 	return (
 		<Offcanvas
-			onHide={props.setOffcanvasState}
+			onHide={setOffcanvasState}
 			placement="bottom"
-			show={props.offcanvasState}
+			show={offcanvasState}
 		>
 			<Offcanvas.Header closeButton>
 				<Offcanvas.Title>Settings</Offcanvas.Title>
@@ -33,6 +44,7 @@ export default function SettingsMenu(props) {
 
 			<Offcanvas.Body>
 				<Container className="d-grid gap-3">
+					{/* Sort functionality */}
 					<Row>
 						<Col>
 							<Button
@@ -67,6 +79,7 @@ export default function SettingsMenu(props) {
 					</Row>
 
 					<Row>
+						{/* Manage pantry */}
 						<Col>
 							<Button
 								className="w-100"
@@ -78,6 +91,7 @@ export default function SettingsMenu(props) {
 							</Button>
 						</Col>
 
+						{/* Logout */}
 						<Col>
 							<Button
 								className="w-100"
@@ -94,17 +108,17 @@ export default function SettingsMenu(props) {
 
 			{/* Manage pantry screen */}
 			<ManagePantryModal
+				{...props}
 				modalState={showManageModal}
 				setModalState={setShowManageModal}
 			/>
 
-			{/* TODO: implement logout */}
 			{/* Logout confirmation */}
 			<ConfirmModal
 				cancelText="Go back"
 				confirmText="Log out"
-				// handler={'[LOGOUT]'}
-				// handlerData={'[DATA]'}
+				handler={setToken}
+				handlerData={null}
 				modalState={showLogoutModal}
 				setModalState={setShowLogoutModal}
 				titleText="Are you sure you want log out?"

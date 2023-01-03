@@ -6,6 +6,8 @@ import { Button, Col, Form, Modal, Row, Stack } from 'react-bootstrap';
 // TODO: improve error handling
 
 export default function AddItemModal(props) {
+	const { userID } = props;
+
 	const [sizeDisabled, setSizeDisabled] = useState(false);
 	const [expirationDisabled, setExpirationDisabled] = useState(false);
 	const [locationDisabled, setLocationDisabled] = useState(false);
@@ -33,11 +35,12 @@ export default function AddItemModal(props) {
 			unit: sizeState.checked ? undefined : unit.value,
 			expiration: expirationState.checked ? undefined : expiration.value,
 			location: locationState.checked ? undefined : location.value,
+			userID: userID,
 		};
 
 		// POST request
 		try {
-			await fetch('/api', {
+			await fetch(`/api/users/${userID}`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(data),
@@ -50,7 +53,7 @@ export default function AddItemModal(props) {
 		}
 
 		resetForm();
-		props.fetchData();
+		props.fetchData(`/users/${userID}`);
 	};
 
 	return (
@@ -67,7 +70,7 @@ export default function AddItemModal(props) {
 				</Modal.Header>
 
 				<Modal.Body>
-					<Stack gap={4}>
+					<Stack gap={3}>
 						{/* Name */}
 						<Form.Group controlId="name">
 							{/* <Form.Label>Item name</Form.Label> */}

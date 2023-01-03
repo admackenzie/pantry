@@ -8,6 +8,7 @@ import { Badge, Card, Dropdown, ListGroup } from 'react-bootstrap';
 // TODO: error handling on fetch requests
 
 export default function ItemCard(props) {
+	const { fetchData, userID } = props;
 	const {
 		expiration,
 		isExpired,
@@ -17,11 +18,13 @@ export default function ItemCard(props) {
 		size,
 		unit,
 	} = props.data;
+	const itemID = props.data._id;
+
 	const [quantity, setQuantity] = useState(props.data.quantity);
 	const [showModal, setShowModal] = useState(false);
 
 	// PATCH request
-	const handleQuantity = async (id, op) => {
+	const handleQuantity = async op => {
 		// Calculate quantity
 		const calcQuantity = (quantity, op) => {
 			if (op === 'add') return +quantity + 1;
@@ -30,7 +33,7 @@ export default function ItemCard(props) {
 		const newQuantity = calcQuantity(quantity, op);
 
 		// Response
-		await fetch(`/api/${id}`, {
+		await fetch(`/api/users/${userID}/${itemID}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-type': 'application/json; charset=UTF-8',
@@ -48,11 +51,11 @@ export default function ItemCard(props) {
 
 	// DELETE request
 	const handleDelete = async id => {
-		await fetch(`/api/${id}`, { method: 'DELETE' });
+		await fetch(`/api/users/${userID}/${itemID}`, { method: 'DELETE' });
 
 		setShowModal(false);
 
-		props.fetchData();
+		fetchData(`/users/${userID}`);
 	};
 
 	return (
@@ -118,22 +121,14 @@ export default function ItemCard(props) {
 					</Dropdown.Toggle>
 
 					<Dropdown.Menu>
-						<Dropdown.Item
-							onClick={() =>
-								handleQuantity(props.data._id, 'add')
-							}
-						>
+						<Dropdown.Item onClick={() => handleQuantity('add')}>
 							<Badge bg="light" className="me-3">
 								➕
 							</Badge>
 							Add item
 						</Dropdown.Item>
 
-						<Dropdown.Item
-							onClick={() =>
-								handleQuantity(props.data._id, 'sub')
-							}
-						>
+						<Dropdown.Item onClick={() => handleQuantity('sub')}>
 							<Badge bg="light" className="me-3">
 								➖
 							</Badge>
@@ -154,7 +149,7 @@ export default function ItemCard(props) {
 							cancelText="Go back"
 							confirmText="Delete"
 							handler={handleDelete}
-							handlerData={props.data._id}
+							handlerData={itemID}
 							modalState={showModal}
 							setModalState={setShowModal}
 							titleText="Are you sure you want to delete this item?"
