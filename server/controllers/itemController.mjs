@@ -31,21 +31,17 @@ const getAllItems = async (req, res) => {
 		const re = new RegExp(`${req.query.name ?? ''}`, 'i');
 
 		// Return items ordered by most recently added as default
-		let items = await Item.find({ name: { $regex: re } }, { __v: 0 }).sort(
-			req.query.sort ?? '-addedOn'
-		);
+		let items = await Item.find(
+			{ name: { $regex: re }, userID: req.params.id }
+			// { __v: 0 }
+		).sort(req.query.sort ?? '-addedOn');
 
 		res.status(200).json({
 			status: 'success',
 			results: items.length,
 			data: { items },
 		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'failed',
-			error: error,
-		});
-	}
+	} catch (error) {}
 };
 
 // GET single

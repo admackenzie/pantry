@@ -55,6 +55,10 @@ const itemSchema = new Schema({
 		// select: false,
 		type: String,
 	},
+	userID: {
+		required: true,
+		type: String,
+	},
 });
 
 /*
