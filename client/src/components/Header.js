@@ -28,6 +28,15 @@ export default function Header(props) {
 		fetchData(`/users/${userID}?name=${e.target.value}&sort=${sortState}`);
 	};
 
+	// const handleLocations = async () => {
+	// 	const res = await fetch(`/api/locations/${userID}`);
+	// 	const {
+	// 		data: { locations },
+	// 	} = await res.json();
+
+	// 	return locations;
+	// };
+
 	return (
 		<Stack className="bg-light px-3 mb-3 sticky-top" gap={1}>
 			<Nav className="align-items-center justify-content-between">
@@ -40,7 +49,7 @@ export default function Header(props) {
 					}}
 				>
 					<span>Pantry</span>
-					<sup className="ms-1 fs-6">0.1.0 build</sup>
+					<sup className="ms-2 fs-6">pre-release</sup>
 				</Navbar.Brand>
 
 				<div className="align-items-center d-inline-flex">

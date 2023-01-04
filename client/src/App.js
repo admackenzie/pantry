@@ -1,5 +1,3 @@
-// Core modules
-import { useState } from 'react';
 // Local modules
 import IndexPage from './pages/IndexPage';
 import LoginPage from './pages/LoginPage';
@@ -8,26 +6,25 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { Route, Routes } from 'react-router-dom';
 
 export default function App() {
-	const [token, setToken] = useState(null);
-	const handleAuth = token => setToken(token);
-
 	return (
 		<Routes>
-			{/* Redirect to /login before JWT is verified */}
+			{/* Index */}
 			<Route
 				element={
-					<ProtectedRoute authorized={token}>
-						<IndexPage setToken={setToken} token={token} />
+					// Redirect to /login before JWT is verified
+					<ProtectedRoute
+						// Authorize if JWT is in localStorage
+						authorized={() => !!localStorage.getItem('JWT')}
+					>
+						<IndexPage />
 					</ProtectedRoute>
 				}
 				exact
 				path="/"
 			/>
 
-			<Route
-				element={<LoginPage handleAuth={handleAuth} />}
-				path="/login"
-			/>
+			{/* Login */}
+			<Route element={<LoginPage />} path="/login" />
 		</Routes>
 	);
 }

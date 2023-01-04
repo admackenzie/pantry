@@ -9,7 +9,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 // TODO: store usernames as lowercase in database??
 // TODO: improve error reporting here and in model and controller
-// FIXME: add bcrypt here to hash passwords client-side?
 
 export default function LoginPage(props) {
 	const navigate = useNavigate();
@@ -41,8 +40,8 @@ export default function LoginPage(props) {
 			const authentication = await res.json();
 
 			if (authentication.status === 'success') {
-				// Set app-level JWT for user
-				props.handleAuth(authentication.token);
+				// Store JWT in localStorage
+				localStorage.setItem('JWT', authentication.token);
 
 				// Redirect to index page
 				navigate('/');

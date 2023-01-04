@@ -38,7 +38,11 @@ const userSchema = new Schema({
 			message: 'Passwords do not match.',
 		},
 	},
-	locations: [String],
+
+	locations: {
+		default: ['Pantry 1'],
+		type: [String],
+	},
 });
 
 userSchema.pre('save', async function (next) {

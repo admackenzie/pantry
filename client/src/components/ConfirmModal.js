@@ -25,7 +25,12 @@ export default function ConfirmModal(props) {
 				>
 					{cancelText}
 				</Button>
-				<Button onClick={() => handler(handlerData)} variant="primary">
+				<Button
+					onClick={() =>
+						handlerData ? handler(handlerData) : handler()
+					}
+					variant="primary"
+				>
 					{confirmText}
 				</Button>
 			</Modal.Footer>
