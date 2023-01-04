@@ -7,17 +7,26 @@ import ItemCard from '../components/ItemCard';
 // Third party
 import { Container, Col, Row } from 'react-bootstrap';
 
-export default function IndexPage(props) {
+export default function IndexPage() {
+	/* 
+		TODO: MASTER LIST
+		
+			- try/catch for all fetch requests
+			- implement better error handling everywhere
+			- tutorial modal on signup 
+			- reset password and delete account functionality
+			- improve appearance
+
+	*/
+
 	const [data, setData] = useState([]);
 	const [error, setError] = useState(null);
 	const [isLoaded, setIsLoaded] = useState(false);
 
 	// User data
 	const [userID, setUserID] = useState();
-	const [userLocations, setUserLocations] = useState();
+	const [userLocations, setUserLocations] = useState([]);
 	const [username, setUsername] = useState();
-
-	//TODO: implement cookies for logged in state
 
 	// TODO: improve other async functions to useState like this, or remove bloat from this function like the others
 	const fetchData = async route => {
@@ -33,14 +42,18 @@ export default function IndexPage(props) {
 		}
 	};
 
-	// FIXME: this is firing twice because of a dependency on props.token. Is there an efficient way to get the token within useEffect here?
+	// FIXME: this is firing twice on page load. Once for page render and once for authorize()?
 	// Fetch all items for logged in user
 	useEffect(() => {
+		// console.log('useEffect fired');
+
+		const token = localStorage.getItem('JWT');
+
 		const authorize = async () => {
 			const res = await fetch('/api/authorize', {
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${props.token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			});
 			const authorization = await res.json();
@@ -55,13 +68,13 @@ export default function IndexPage(props) {
 		};
 
 		authorize();
-	}, [props.token]);
+	}, []);
 
 	return (
 		<Container fluid>
 			<Header
-				{...props}
 				fetchData={fetchData}
+				setUserLocations={setUserLocations}
 				userID={userID}
 				userLocations={userLocations}
 				username={username}

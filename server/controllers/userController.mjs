@@ -1,17 +1,9 @@
 import { User } from '../models/userModel.mjs';
 
-// TODO: runValidators: true ??
-
-const editLocations = async (req, res) => {
+// -------------------------------- READ --------------------------------
+const getLocations = async (req, res) => {
 	try {
-		const locations = await User.findByIdAndUpdate(
-			req.params.id,
-			req.body,
-			{
-				new: true,
-				// runValidators: true,
-			}
-		);
+		const { locations } = await User.findOne({ _id: req.params.id });
 
 		res.status(200).json({
 			status: 'success',
@@ -26,9 +18,18 @@ const editLocations = async (req, res) => {
 	}
 };
 
-const getLocations = async (req, res) => {
+// -------------------------------- UPDATE --------------------------------
+// TODO: runValidators: true ??
+const editLocations = async (req, res) => {
 	try {
-		const { locations } = await User.findOne({ _id: req.params.id });
+		const locations = await User.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{
+				new: true,
+				// runValidators: true,
+			}
+		);
 
 		res.status(200).json({
 			status: 'success',

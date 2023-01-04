@@ -6,7 +6,8 @@ import { Button, Col, Form, Modal, Row, Stack } from 'react-bootstrap';
 // TODO: improve error handling
 
 export default function AddItemModal(props) {
-	const { userID } = props;
+	const { fetchData, modalState, setModalState, userID, userLocations } =
+		props;
 
 	const [sizeDisabled, setSizeDisabled] = useState(false);
 	const [expirationDisabled, setExpirationDisabled] = useState(false);
@@ -17,7 +18,7 @@ export default function AddItemModal(props) {
 		setSizeDisabled(false);
 		setExpirationDisabled(false);
 		setLocationDisabled(false);
-		props.setModalState(false);
+		setModalState(false);
 	};
 
 	// Retrieve form data and create new Item
@@ -53,7 +54,7 @@ export default function AddItemModal(props) {
 		}
 
 		resetForm();
-		props.fetchData(`/users/${userID}`);
+		fetchData(`/users/${userID}`);
 	};
 
 	return (
@@ -61,7 +62,7 @@ export default function AddItemModal(props) {
 			backdrop="static"
 			centered
 			onHide={() => resetForm()}
-			show={props.modalState}
+			show={modalState}
 			size="lg"
 		>
 			<Form onSubmit={handleAddItem}>
@@ -73,7 +74,6 @@ export default function AddItemModal(props) {
 					<Stack gap={3}>
 						{/* Name */}
 						<Form.Group controlId="name">
-							{/* <Form.Label>Item name</Form.Label> */}
 							<Form.Control
 								placeholder="Enter item name"
 								required
@@ -87,7 +87,6 @@ export default function AddItemModal(props) {
 
 						{/* Size and unit*/}
 						<Form.Group controlId="size">
-							{/* <Form.Label>Size</Form.Label> */}
 							<Row>
 								<Col>
 									<Form.Control
@@ -135,7 +134,6 @@ export default function AddItemModal(props) {
 
 						{/* Expiration */}
 						<Form.Group controlId="expiration">
-							{/* <Form.Label>Expiration date</Form.Label> */}
 							<Form.Control
 								disabled={expirationDisabled}
 								onFocus={e => (e.target.type = 'date')}
@@ -159,7 +157,6 @@ export default function AddItemModal(props) {
 
 						{/* Location */}
 						<Form.Group controlId="location">
-							{/* <Form.Label>Location</Form.Label> */}
 							<Form.Select
 								className="text-muted"
 								disabled={locationDisabled}
@@ -170,14 +167,14 @@ export default function AddItemModal(props) {
 								size="lg"
 							>
 								<option hidden>Choose location</option>
-								<option value="Basement">Basement</option>
-								<option value="Big cupboard">
-									Big cupboard
-								</option>
-								<option value="Small cupboard">
-									Small cupboard
-								</option>
-								<option value="Other">Other</option>
+
+								{(userLocations ?? []).map((location, i) => {
+									return (
+										<option key={i} value={location}>
+											{location}
+										</option>
+									);
+								})}
 							</Form.Select>
 							<Form.Text className="text-muted">
 								<Form.Check

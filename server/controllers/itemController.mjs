@@ -1,8 +1,9 @@
 import { Item } from '../models/itemModel.mjs';
 
+// TODO: better error handling
+
 // -------------------------------- CREATE --------------------------------
 // TODO: runValidators: true ??
-// TODO: better error handling
 
 // POST new item
 const addItem = async (req, res) => {

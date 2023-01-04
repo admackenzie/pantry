@@ -13,11 +13,16 @@ import {
 } from 'react-bootstrap';
 
 export default function ManagePantryModal(props) {
-	const { modalState, setModalState, userID } = props;
+	const {
+		modalState,
+		setModalState,
+		setUserLocations,
+		userID,
+		userLocations,
+	} = props;
 
 	// Display list of locations to add
 	const [locationsLocal, setLocationsLocal] = useState([]);
-	const [locationsDB, setLocationsDB] = useState(props.userLocations);
 
 	// Save button display state
 	const [saveDisabled, setSaveDisabled] = useState(true);
@@ -33,18 +38,18 @@ export default function ManagePantryModal(props) {
 
 		// Update display as locations are added or removed
 		setLocationsLocal(locationsLocal);
-	}, [locationsLocal, locationsDB]);
+	}, [locationsLocal, userLocations]);
 
 	// Add or remove locations from User model
 	const editLocations = async (e, method) => {
 		let newLocations;
 
 		if (method === 'add') {
-			newLocations = [...locationsLocal, ...locationsDB].sort();
+			newLocations = [...locationsLocal, ...userLocations].sort();
 
 			resetForm();
 		} else if (method === 'delete') {
-			const temp = [...locationsDB];
+			const temp = [...userLocations];
 
 			temp.splice(+e.target.value, 1, '');
 
@@ -68,8 +73,8 @@ export default function ManagePantryModal(props) {
 			data: { locations },
 		} = await res.json();
 
-		// Update state with added or removed locations
-		setLocationsDB(locations);
+		// Update locations prop at IndexPage level
+		setUserLocations(locations);
 	};
 
 	// Clear form data
@@ -178,13 +183,13 @@ export default function ManagePantryModal(props) {
 			{/* View locations display */}
 			<Modal.Body className={!viewLocations && 'd-none'}>
 				<ListGroup variant="flush">
-					{locationsDB.length < 1 ? (
+					{userLocations.length < 1 ? (
 						<ErrorAlert
 							text="No stored pantry locations."
 							variant="light"
 						/>
 					) : (
-						locationsDB.map((location, i) => {
+						userLocations.map((location, i) => {
 							return (
 								<ListGroup.Item
 									className="d-flex justify-content-between"

@@ -1,5 +1,6 @@
 // Core modules
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 // Local modules
 import ConfirmModal from './ConfirmModal';
 import ManagePantryModal from './ManagePantryModal';
@@ -13,9 +14,10 @@ export default function SettingsMenu(props) {
 		searchInput,
 		setOffcanvasState,
 		setSortState,
-		setToken,
 		userID,
 	} = props;
+
+	const navigate = useNavigate();
 
 	// FIXME: This is a hacky way to have toggle button states outside a toggle button group. It only works with a maximum of two buttons (disabled={toggle} and disabled={!toggle})
 	const [buttonToggle, setButtonToggle] = useState(true);
@@ -30,6 +32,12 @@ export default function SettingsMenu(props) {
 		setSortState(sortParam);
 
 		fetchData(`/users/${userID}?name=${searchInput}&sort=${sortParam}`);
+	};
+
+	// Clear stored JWT
+	const logout = () => {
+		localStorage.clear();
+		navigate('/login');
 	};
 
 	return (
@@ -117,8 +125,7 @@ export default function SettingsMenu(props) {
 			<ConfirmModal
 				cancelText="Go back"
 				confirmText="Log out"
-				handler={setToken}
-				handlerData={null}
+				handler={logout}
 				modalState={showLogoutModal}
 				setModalState={setShowLogoutModal}
 				titleText="Are you sure you want log out?"
